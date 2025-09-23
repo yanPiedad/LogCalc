@@ -1,0 +1,3535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyberpunk Calculator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Keep all existing styles unchanged */
+        * {
+            box-sizing: border-box;
+            font-family: 'Rajdhani', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            background: #0a0a12;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(120, 119, 198, 0.3), transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(255, 119, 198, 0.3), transparent 20%),
+                radial-gradient(circle at 50% 50%, rgba(120, 219, 255, 0.1), transparent 50%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: #e0e0e0;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent 30%, rgba(120, 219, 255, 0.05) 50%, transparent 70%);
+            background-size: 200% 200%;
+            animation: scanlines 8s linear infinite;
+            z-index: 1;
+        }
+        
+        @keyframes scanlines {
+            0% { background-position: 0 0; }
+            100% { background-position: 100% 100%; }
+        }
+        
+        .container {
+            background: rgba(10, 10, 20, 0.85);
+            border: 1px solid rgba(120, 219, 255, 0.3);
+            border-radius: 15px;
+            box-shadow: 
+                0 0 30px rgba(120, 219, 255, 0.3),
+                0 0 60px rgba(255, 0, 255, 0.2),
+                inset 0 0 20px rgba(120, 219, 255, 0.1);
+            overflow: hidden;
+            width: 100%;
+            max-width: 550px;
+            position: relative;
+            animation: fadeIn 0.8s ease-out;
+            z-index: 2;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: #e0e0e0;
+            padding: 25px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 1px solid rgba(120, 219, 255, 0.3);
+        }
+        
+        .header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(120, 219, 255, 0.1), transparent);
+            animation: glitch 5s infinite linear;
+        }
+        
+        @keyframes glitch {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 32px;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 2;
+            text-shadow: 
+                0 0 10px rgba(120, 219, 255, 0.8),
+                0 0 20px rgba(120, 219, 255, 0.5);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        
+        .header p {
+            font-family: 'Orbitron', sans-serif;
+            opacity: 0.8;
+            font-size: 14px;
+            position: relative;
+            z-index: 2;
+            letter-spacing: 1px;
+            color: #77dbff;
+        }
+        
+        .auth-container {
+            padding: 40px;
+            position: relative;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 12px;
+            font-weight: 600;
+            color: #77dbff;
+            font-size: 16px;
+            transition: color 0.3s;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 18px 25px;
+            border: 2px solid rgba(120, 219, 255, 0.3);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+            background: rgba(10, 10, 20, 0.7);
+            color: #e0e0e0;
+            position: relative;
+            z-index: 1;
+            font-family: 'Rajdhani', sans-serif;
+            letter-spacing: 1px;
+        }
+        
+        .form-group input:focus, .form-group select:focus {
+            border-color: #77dbff;
+            outline: none;
+            background: rgba(10, 10, 20, 0.9);
+            box-shadow: 
+                0 0 15px rgba(120, 219, 255, 0.5),
+                0 0 30px rgba(120, 219, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .form-group i {
+            position: absolute;
+            right: 20px;
+            top: 45px;
+            color: #77dbff;
+            z-index: 2;
+            transition: color 0.3s;
+        }
+        
+        .form-group input:focus + i {
+            color: #fff;
+            text-shadow: 0 0 10px rgba(120, 219, 255, 0.8);
+        }
+        
+        .password-strength {
+            margin-top: 10px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .password-strength-meter {
+            height: 100%;
+            width: 0;
+            border-radius: 3px;
+            transition: all 0.3s;
+        }
+        
+        .password-requirements {
+            margin-top: 15px;
+            font-size: 14px;
+        }
+        
+        .requirement {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            color: #a0a0a0;
+        }
+        
+        .requirement i {
+            margin-right: 8px;
+            width: 16px;
+            text-align: center;
+        }
+        
+        .requirement.valid {
+            color: #2ecc71;
+        }
+        
+        .requirement.valid i {
+            color: #2ecc71;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #77dbff, #3d8bfe);
+            color: #0a0a12;
+            border: none;
+            border-radius: 8px;
+            padding: 18px 25px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        
+        .btn::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(-100%);
+            transition: transform 0.5s;
+            z-index: -1;
+        }
+        
+        .btn:hover::before {
+            transform: translateX(0);
+        }
+        
+        .btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 
+                0 10px 25px rgba(120, 219, 255, 0.5),
+                0 0 30px rgba(120, 219, 255, 0.3);
+        }
+        
+        .btn:active {
+            transform: translateY(-1px);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #ff77db, #ff3d8b);
+        }
+        
+        .btn-secondary:hover {
+            box-shadow: 
+                0 10px 25px rgba(255, 119, 219, 0.5),
+                0 0 30px rgba(255, 119, 219, 0.3);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #2ecc71, #00d9fe);
+        }
+        
+        .btn-success:hover {
+            box-shadow: 
+                0 10px 25px rgba(46, 204, 113, 0.5),
+                0 0 30px rgba(46, 204, 113, 0.3);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #ff7777, #ff3d3d);
+        }
+        
+        .btn-danger:hover {
+            box-shadow: 
+                0 10px 25px rgba(255, 119, 119, 0.5),
+                0 0 30px rgba(255, 119, 119, 0.3);
+        }
+        
+        .message {
+            padding: 18px;
+            border-radius: 8px;
+            margin-top: 25px;
+            text-align: center;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            animation: slideIn 0.5s ease-out;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .error {
+            background: rgba(255, 61, 61, 0.1);
+            color: #ff3d3d;
+            border: 1px solid rgba(255, 61, 61, 0.3);
+        }
+        
+        .success {
+            background: rgba(46, 204, 113, 0.1);
+            color: #2ecc71;
+            border: 1px solid rgba(46, 204, 113, 0.3);
+        }
+        
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .auth-tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        
+        .auth-tab.active {
+            background: linear-gradient(135deg, #77dbff, #3d8bfe);
+            color: #0a0a12;
+        }
+        
+        .auth-tab:not(.active):hover {
+            background: rgba(120, 219, 255, 0.1);
+        }
+        
+        .auth-form {
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        .auth-form.active {
+            display: block;
+        }
+        
+        .calculator {
+            display: none;
+            padding: 40px;
+        }
+        
+        /* Calculator Type Selector Styles */
+        .calc-type-selector {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 25px;
+            gap: 10px;
+            position: relative;
+        }
+        
+        .calc-type-btn {
+            background: rgba(26, 26, 46, 0.7);
+            border: 1px solid rgba(120, 219, 255, 0.3);
+            color: #e0e0e0;
+            border-radius: 8px;
+            padding: 10px 15px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .calc-type-btn::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(120, 219, 255, 0.1);
+            transform: translateX(-100%);
+            transition: transform 0.5s;
+            z-index: -1;
+        }
+        
+        .calc-type-btn:hover::before {
+            transform: translateX(0);
+        }
+        
+        .calc-type-btn.active {
+            background: linear-gradient(135deg, #77dbff, #3d8bfe);
+            color: #0a0a12;
+            border-color: #77dbff;
+        }
+        
+        .calc-type-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(120, 219, 255, 0.4);
+        }
+        
+        /* Tooltip Styles */
+        .tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(10, 10, 20, 0.95);
+            color: #e0e0e0;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-family: 'Rajdhani', sans-serif;
+            white-space: nowrap;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(120, 219, 255, 0.3);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            margin-bottom: 10px;
+            max-width: 300px;
+            text-align: center;
+            line-height: 1.4;
+        }
+        
+        .tooltip::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 6px;
+            border-style: solid;
+            border-color: rgba(120, 219, 255, 0.3) transparent transparent transparent;
+        }
+        
+        .calc-type-btn:hover .tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .calc-display {
+            background: linear-gradient(135deg, #0a0a12, #1a1a2e);
+            color: #e0e0e0;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            font-size: 32px;
+            text-align: right;
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: flex-end;
+            overflow: hidden;
+            box-shadow: 
+                inset 0 0 20px rgba(0, 0, 0, 0.5),
+                0 0 30px rgba(120, 219, 255, 0.2);
+            position: relative;
+            z-index: 1;
+            border: 1px solid rgba(120, 219, 255, 0.3);
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .calc-display::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(120, 219, 255, 0.05), rgba(255, 119, 219, 0.05));
+            z-index: -1;
+        }
+        
+        .calc-display .previous-operand {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 10px;
+            max-height: 25px;
+            overflow: hidden;
+            font-family: 'Rajdhani', sans-serif;
+        }
+        
+        .calc-display .current-operand {
+            font-size: 36px;
+            font-weight: 600;
+            text-shadow: 
+                0 0 10px rgba(120, 219, 255, 0.8),
+                0 0 20px rgba(120, 219, 255, 0.5);
+        }
+        
+        .calc-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+        
+        .calc-btn {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            border: 1px solid rgba(120, 219, 255, 0.3);
+            color: #e0e0e0;
+            border-radius: 10px;
+            padding: 25px;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 
+                0 5px 15px rgba(0, 0, 0, 0.3),
+                0 0 20px rgba(120, 219, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .calc-btn::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(120, 219, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .calc-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .calc-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 
+                0 10px 25px rgba(0, 0, 0, 0.4),
+                0 0 30px rgba(120, 219, 255, 0.3);
+            border-color: rgba(120, 219, 255, 0.6);
+        }
+        
+        .calc-btn:active {
+            transform: translateY(-2px);
+        }
+        
+        .calc-btn.operator {
+            background: linear-gradient(135deg, #3d8bfe, #1a5fb4);
+            color: #fff;
+        }
+        
+        .calc-btn.operator:hover {
+            background: linear-gradient(135deg, #4a9bff, #2670d4);
+            box-shadow: 
+                0 10px 25px rgba(61, 139, 254, 0.4),
+                0 0 30px rgba(61, 139, 254, 0.3);
+        }
+        
+        .calc-btn.equals {
+            background: linear-gradient(135deg, #2ecc71, #00d9fe);
+            color: #fff;
+        }
+        
+        .calc-btn.equals:hover {
+            background: linear-gradient(135deg, #3dd884, #00e1fe);
+            box-shadow: 
+                0 10px 25px rgba(46, 204, 113, 0.4),
+                0 0 30px rgba(46, 204, 113, 0.3);
+        }
+        
+        .calc-btn.clear {
+            background: linear-gradient(135deg, #ff7777, #ff3d3d);
+            color: #fff;
+        }
+        
+        .calc-btn.clear:hover {
+            background: linear-gradient(135deg, #ff8787, #ff4d4d);
+            box-shadow: 
+                0 10px 25px rgba(255, 119, 119, 0.4),
+                0 0 30px rgba(255, 119, 119, 0.3);
+        }
+        
+        .calc-btn.function {
+            background: linear-gradient(135deg, #ff77db, #ff3d8b);
+            color: #fff;
+        }
+        
+        .calc-btn.function:hover {
+            background: linear-gradient(135deg, #ff87e3, #ff4d97);
+            box-shadow: 
+                0 10px 25px rgba(255, 119, 219, 0.4),
+                0 0 30px rgba(255, 119, 219, 0.3);
+        }
+        
+        .calc-history {
+            margin-top: 30px;
+            background: rgba(10, 10, 20, 0.7);
+            border: 1px solid rgba(120, 219, 255, 0.3);
+            border-radius: 15px;
+            padding: 25px;
+            max-height: 250px;
+            overflow-y: auto;
+            box-shadow: 
+                inset 0 0 20px rgba(0, 0, 0, 0.3),
+                0 0 30px rgba(120, 219, 255, 0.1);
+        }
+        
+        .calc-history h3 {
+            margin-bottom: 20px;
+            color: #77dbff;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 20px;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        
+        .history-item {
+            padding: 15px 20px;
+            background: rgba(26, 26, 46, 0.7);
+            border: 1px solid rgba(120, 219, 255, 0.2);
+            border-radius: 10px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 
+                0 5px 15px rgba(0, 0, 0, 0.2),
+                0 0 20px rgba(120, 219, 255, 0.1);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .history-item:hover {
+            transform: translateX(8px);
+            box-shadow: 
+                0 8px 20px rgba(0, 0, 0, 0.3),
+                0 0 30px rgba(120, 219, 255, 0.2);
+            border-color: rgba(120, 219, 255, 0.5);
+        }
+        
+        .history-expression {
+            color: #a0a0a0;
+            font-weight: 500;
+            font-family: 'Rajdhani', sans-serif;
+        }
+        
+        .history-result {
+            font-weight: 700;
+            color: #77dbff;
+            font-size: 18px;
+            font-family: 'Orbitron', sans-serif;
+            text-shadow: 0 0 10px rgba(120, 219, 255, 0.5);
+        }
+        
+        .clear-history {
+            background: transparent;
+            border: 1px solid rgba(255, 119, 119, 0.5);
+            color: #ff7777;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 10px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 15px;
+            width: 100%;
+            border-radius: 8px;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        
+        .clear-history:hover {
+            background: rgba(255, 119, 119, 0.1);
+            color: #ff8787;
+            border-color: rgba(255, 119, 119, 0.8);
+        }
+        
+        .logout-btn {
+            margin-top: 30px;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(10, 10, 20, 0.7), rgba(26, 26, 46, 0.7));
+            border: 1px solid rgba(120, 219, 255, 0.3);
+            border-radius: 15px;
+            box-shadow: 
+                0 8px 25px rgba(0, 0, 0, 0.3),
+                0 0 30px rgba(120, 219, 255, 0.1);
+        }
+        
+        .user-avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #77dbff, #3d8bfe);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #0a0a12;
+            font-size: 28px;
+            font-weight: 700;
+            box-shadow: 
+                0 8px 20px rgba(120, 219, 255, 0.5),
+                0 0 30px rgba(120, 219, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .user-avatar::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
+            animation: rotate 5s infinite linear;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .user-details h3 {
+            margin: 0;
+            color: #77dbff;
+            font-size: 22px;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        
+        .user-details p {
+            margin: 5px 0 0 0;
+            color: #a0a0a0;
+            font-size: 16px;
+            font-family: 'Rajdhani', sans-serif;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .floating-shapes {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+        
+        .shape {
+            position: absolute;
+            opacity: 0.1;
+        }
+        
+        .shape-1 {
+            width: 150px;
+            height: 150px;
+            background: #77dbff;
+            border-radius: 50%;
+            top: 10%;
+            left: 5%;
+            animation: float 15s infinite ease-in-out;
+        }
+        
+        .shape-2 {
+            width: 100px;
+            height: 100px;
+            background: #ff77db;
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+            bottom: 15%;
+            right: 10%;
+            animation: float 12s infinite ease-in-out reverse;
+        }
+        
+        .shape-3 {
+            width: 80px;
+            height: 80px;
+            background: #2ecc71;
+            border-radius: 50%;
+            top: 60%;
+            left: 15%;
+            animation: float 18s infinite ease-in-out;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
+        }
+        
+        /* Cyberpunk grid background */
+        .grid-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(120, 219, 255, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(120, 219, 255, 0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+            z-index: -1;
+            opacity: 0.3;
+        }
+        
+        /* Glitch effect */
+        .glitch {
+            position: relative;
+            color: #77dbff;
+            font-size: 32px;
+            font-weight: 700;
+            text-transform: uppercase;
+            text-shadow: 
+                0.05em 0 0 rgba(255, 0, 0, 0.75),
+                -0.025em -0.05em 0 rgba(0, 255, 0, 0.75),
+                0.025em 0.05em 0 rgba(0, 0, 255, 0.75);
+            animation: glitch 500ms infinite;
+        }
+        
+        @keyframes glitch {
+            0% { text-shadow: 
+                0.05em 0 0 rgba(255, 0, 0, 0.75),
+                -0.05em -0.025em 0 rgba(0, 255, 0, 0.75),
+                0.025em 0.05em 0 rgba(0, 0, 255, 0.75); }
+            14% { text-shadow: 
+                0.05em 0 0 rgba(255, 0, 0, 0.75),
+                -0.05em -0.025em 0 rgba(0, 255, 0, 0.75),
+                0.025em 0.05em 0 rgba(0, 0, 255, 0.75); }
+            15% { text-shadow: 
+                -0.05em -0.025em 0 rgba(255, 0, 0, 0.75),
+                0.025em 0.025em 0 rgba(0, 255, 0, 0.75),
+                -0.05em -0.05em 0 rgba(0, 0, 255, 0.75); }
+            49% { text-shadow: 
+                -0.05em -0.025em 0 rgba(255, 0, 0, 0.75),
+                0.025em 0.025em 0 rgba(0, 255, 0, 0.75),
+                -0.05em -0.05em 0 rgba(0, 0, 255, 0.75); }
+            50% { text-shadow: 
+                0.025em 0.05em 0 rgba(255, 0, 0, 0.75),
+                0.05em 0 0 rgba(0, 255, 0, 0.75),
+                0 -0.05em 0 rgba(0, 0, 255, 0.75); }
+            99% { text-shadow: 
+                0.025em 0.05em 0 rgba(255, 0, 0, 0.75),
+                0.05em 0 0 rgba(0, 255, 0, 0.75),
+                0 -0.05em 0 rgba(0, 0, 255, 0.75); }
+            100% { text-shadow: 
+                -0.025em 0 0 rgba(255, 0, 0, 0.75),
+                -0.025em -0.025em 0 rgba(0, 255, 0, 0.75),
+                -0.025em -0.05em 0 rgba(0, 0, 255, 0.75); }
+        }
+        
+        /* Standard Calculator Theme */
+        .standard-theme {
+            background: #0a0a12;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(120, 119, 198, 0.3), transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(255, 119, 198, 0.3), transparent 20%),
+                radial-gradient(circle at 50% 50%, rgba(120, 219, 255, 0.1), transparent 50%);
+        }
+        
+        .standard-theme .container {
+            background: rgba(10, 10, 20, 0.85);
+            border: 1px solid rgba(120, 219, 255, 0.3);
+            box-shadow: 
+                0 0 30px rgba(120, 219, 255, 0.3),
+                0 0 60px rgba(255, 0, 255, 0.2),
+                inset 0 0 20px rgba(120, 219, 255, 0.1);
+        }
+        
+        .standard-theme .header {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            border-bottom: 1px solid rgba(120, 219, 255, 0.3);
+        }
+        
+        .standard-theme .header h1 {
+            color: #77dbff;
+            text-shadow: 
+                0 0 10px rgba(120, 219, 255, 0.8),
+                0 0 20px rgba(120, 219, 255, 0.5);
+        }
+        
+        .standard-theme .header p {
+            color: #77dbff;
+        }
+        
+        .standard-theme .form-group label {
+            color: #77dbff;
+        }
+        
+        .standard-theme .form-group input:focus {
+            border-color: #77dbff;
+            box-shadow: 
+                0 0 15px rgba(120, 219, 255, 0.5),
+                0 0 30px rgba(120, 219, 255, 0.3);
+        }
+        
+        .standard-theme .btn {
+            background: linear-gradient(135deg, #77dbff, #3d8bfe);
+        }
+        
+        .standard-theme .btn:hover {
+            box-shadow: 
+                0 10px 25px rgba(120, 219, 255, 0.5),
+                0 0 30px rgba(120, 219, 255, 0.3);
+        }
+        
+        .standard-theme .calc-display {
+            background: linear-gradient(135deg, #0a0a12, #1a1a2e);
+            box-shadow: 
+                inset 0 0 20px rgba(0, 0, 0, 0.5),
+                0 0 30px rgba(120, 219, 255, 0.2);
+            border: 1px solid rgba(120, 219, 255, 0.3);
+        }
+        
+        .standard-theme .calc-display .current-operand {
+            text-shadow: 
+                0 0 10px rgba(120, 219, 255, 0.8),
+                0 0 20px rgba(120, 219, 255, 0.5);
+        }
+        
+        .standard-theme .calc-btn {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            border: 1px solid rgba(120, 219, 255, 0.3);
+        }
+        
+        .standard-theme .calc-btn:hover {
+            border-color: rgba(120, 219, 255, 0.6);
+            box-shadow: 
+                0 10px 25px rgba(0, 0, 0, 0.4),
+                0 0 30px rgba(120, 219, 255, 0.3);
+        }
+        
+        .standard-theme .calc-btn.operator {
+            background: linear-gradient(135deg, #3d8bfe, #1a5fb4);
+        }
+        
+        .standard-theme .calc-btn.operator:hover {
+            background: linear-gradient(135deg, #4a9bff, #2670d4);
+            box-shadow: 
+                0 10px 25px rgba(61, 139, 254, 0.4),
+                0 0 30px rgba(61, 139, 254, 0.3);
+        }
+        
+        .standard-theme .calc-btn.equals {
+            background: linear-gradient(135deg, #2ecc71, #00d9fe);
+        }
+        
+        .standard-theme .calc-btn.equals:hover {
+            background: linear-gradient(135deg, #3dd884, #00e1fe);
+            box-shadow: 
+                0 10px 25px rgba(46, 204, 113, 0.4),
+                0 0 30px rgba(46, 204, 113, 0.3);
+        }
+        
+        .standard-theme .calc-btn.clear {
+            background: linear-gradient(135deg, #ff7777, #ff3d3d);
+        }
+        
+        .standard-theme .calc-btn.clear:hover {
+            background: linear-gradient(135deg, #ff8787, #ff4d4d);
+            box-shadow: 
+                0 10px 25px rgba(255, 119, 119, 0.4),
+                0 0 30px rgba(255, 119, 119, 0.3);
+        }
+        
+        .standard-theme .calc-btn.function {
+            background: linear-gradient(135deg, #ff77db, #ff3d8b);
+        }
+        
+        .standard-theme .calc-btn.function:hover {
+            background: linear-gradient(135deg, #ff87e3, #ff4d97);
+            box-shadow: 
+                0 10px 25px rgba(255, 119, 219, 0.4),
+                0 0 30px rgba(255, 119, 219, 0.3);
+        }
+        
+        .standard-theme .calc-history {
+            background: rgba(10, 10, 20, 0.7);
+            border: 1px solid rgba(120, 219, 255, 0.3);
+        }
+        
+        .standard-theme .calc-history h3 {
+            color: #77dbff;
+        }
+        
+        .standard-theme .history-item {
+            background: rgba(26, 26, 46, 0.7);
+            border: 1px solid rgba(120, 219, 255, 0.2);
+        }
+        
+        .standard-theme .history-item:hover {
+            border-color: rgba(120, 219, 255, 0.5);
+        }
+        
+        .standard-theme .history-result {
+            color: #77dbff;
+            text-shadow: 0 0 10px rgba(120, 219, 255, 0.5);
+        }
+        
+        .standard-theme .user-avatar {
+            background: linear-gradient(135deg, #77dbff, #3d8bfe);
+            box-shadow: 
+                0 8px 20px rgba(120, 219, 255, 0.5),
+                0 0 30px rgba(120, 219, 255, 0.3);
+        }
+        
+        .standard-theme .user-details h3 {
+            color: #77dbff;
+        }
+        
+        .standard-theme .clear-history {
+            border: 1px solid rgba(255, 119, 119, 0.5);
+            color: #ff7777;
+        }
+        
+        .standard-theme .clear-history:hover {
+            background: rgba(255, 119, 119, 0.1);
+            color: #ff8787;
+            border-color: rgba(255, 119, 119, 0.8);
+        }
+        
+        /* Fraction Calculator Theme */
+        .fraction-theme {
+            background: #0a0a14;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255, 119, 198, 0.3), transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(255, 119, 198, 0.3), transparent 20%),
+                radial-gradient(circle at 50% 50%, rgba(255, 119, 198, 0.1), transparent 50%);
+        }
+        
+        .fraction-theme .container {
+            background: rgba(10, 10, 20, 0.85);
+            border: 1px solid rgba(255, 119, 198, 0.3);
+            box-shadow: 
+                0 0 30px rgba(255, 119, 198, 0.3),
+                0 0 60px rgba(255, 119, 198, 0.2),
+                inset 0 0 20px rgba(255, 119, 198, 0.1);
+        }
+        
+        .fraction-theme .header {
+            background: linear-gradient(135deg, #1a0a2e, #2a0a3e);
+            border-bottom: 1px solid rgba(255, 119, 198, 0.3);
+        }
+        
+        .fraction-theme .header h1 {
+            color: #ff77db;
+            text-shadow: 
+                0 0 10px rgba(255, 119, 198, 0.8),
+                0 0 20px rgba(255, 119, 198, 0.5);
+        }
+        
+        .fraction-theme .header p {
+            color: #ff77db;
+        }
+        
+        .fraction-theme .form-group label {
+            color: #ff77db;
+        }
+        
+        .fraction-theme .form-group input:focus, .fraction-theme .form-group select:focus {
+            border-color: #ff77db;
+            box-shadow: 
+                0 0 15px rgba(255, 119, 198, 0.5),
+                0 0 30px rgba(255, 119, 198, 0.3);
+        }
+        
+        .fraction-theme .btn {
+            background: linear-gradient(135deg, #ff77db, #ff3d8b);
+        }
+        
+        .fraction-theme .btn:hover {
+            box-shadow: 
+                0 10px 25px rgba(255, 119, 198, 0.5),
+                0 0 30px rgba(255, 119, 198, 0.3);
+        }
+        
+        .fraction-theme .calc-display {
+            background: linear-gradient(135deg, #0a0a14, #1a0a2e);
+            box-shadow: 
+                inset 0 0 20px rgba(0, 0, 0, 0.5),
+                0 0 30px rgba(255, 119, 198, 0.2);
+            border: 1px solid rgba(255, 119, 198, 0.3);
+        }
+        
+        .fraction-theme .calc-display .current-operand {
+            text-shadow: 
+                0 0 10px rgba(255, 119, 198, 0.8),
+                0 0 20px rgba(255, 119, 198, 0.5);
+        }
+        
+        .fraction-theme .calc-btn {
+            background: linear-gradient(135deg, #1a0a2e, #2a0a3e);
+            border: 1px solid rgba(255, 119, 198, 0.3);
+        }
+        
+        .fraction-theme .calc-btn:hover {
+            border-color: rgba(255, 119, 198, 0.6);
+            box-shadow: 
+                0 10px 25px rgba(0, 0, 0, 0.4),
+                0 0 30px rgba(255, 119, 198, 0.3);
+        }
+        
+        .fraction-theme .calc-btn.operator {
+            background: linear-gradient(135deg, #ff3d8b, #cc1a5f);
+        }
+        
+        .fraction-theme .calc-btn.operator:hover {
+            background: linear-gradient(135deg, #ff4d97, #dd2a7f);
+            box-shadow: 
+                0 10px 25px rgba(255, 61, 139, 0.4),
+                0 0 30px rgba(255, 61, 139, 0.3);
+        }
+        
+        .fraction-theme .calc-btn.equals {
+            background: linear-gradient(135deg, #ff77db, #ff3d8b);
+        }
+        
+        .fraction-theme .calc-btn.equals:hover {
+            background: linear-gradient(135deg, #ff87e3, #ff4d97);
+            box-shadow: 
+                0 10px 25px rgba(255, 119, 198, 0.4),
+                0 0 30px rgba(255, 119, 198, 0.3);
+        }
+        
+        .fraction-theme .calc-btn.clear {
+            background: linear-gradient(135deg, #ff7777, #ff3d3d);
+        }
+        
+        .fraction-theme .calc-btn.clear:hover {
+            background: linear-gradient(135deg, #ff8787, #ff4d4d);
+            box-shadow: 
+                0 10px 25px rgba(255, 119, 119, 0.4),
+                0 0 30px rgba(255, 119, 119, 0.3);
+        }
+        
+        .fraction-theme .calc-btn.function {
+            background: linear-gradient(135deg, #ff77db, #ff3d8b);
+        }
+        
+        .fraction-theme .calc-btn.function:hover {
+            background: linear-gradient(135deg, #ff87e3, #ff4d97);
+            box-shadow: 
+                0 10px 25px rgba(255, 119, 219, 0.4),
+                0 0 30px rgba(255, 119, 219, 0.3);
+        }
+        
+        .fraction-theme .calc-history {
+            background: rgba(10, 10, 20, 0.7);
+            border: 1px solid rgba(255, 119, 198, 0.3);
+        }
+        
+        .fraction-theme .calc-history h3 {
+            color: #ff77db;
+        }
+        
+        .fraction-theme .history-item {
+            background: rgba(26, 10, 46, 0.7);
+            border: 1px solid rgba(255, 119, 198, 0.2);
+        }
+        
+        .fraction-theme .history-item:hover {
+            border-color: rgba(255, 119, 198, 0.5);
+        }
+        
+        .fraction-theme .history-result {
+            color: #ff77db;
+            text-shadow: 0 0 10px rgba(255, 119, 198, 0.5);
+        }
+        
+        .fraction-theme .user-avatar {
+            background: linear-gradient(135deg, #ff77db, #ff3d8b);
+            box-shadow: 
+                0 8px 20px rgba(255, 119, 198, 0.5),
+                0 0 30px rgba(255, 119, 198, 0.3);
+        }
+        
+        .fraction-theme .user-details h3 {
+            color: #ff77db;
+        }
+        
+        .fraction-theme .clear-history {
+            border: 1px solid rgba(255, 119, 119, 0.5);
+            color: #ff7777;
+        }
+        
+        .fraction-theme .clear-history:hover {
+            background: rgba(255, 119, 119, 0.1);
+            color: #ff8787;
+            border-color: rgba(255, 119, 119, 0.8);
+        }
+        
+        /* Money Converter Calculator Theme */
+        .money-theme {
+            background: #0a140a;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(198, 165, 0, 0.3), transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(255, 215, 0, 0.3), transparent 20%),
+                radial-gradient(circle at 50% 50%, rgba(255, 215, 0, 0.1), transparent 50%);
+        }
+        
+        .money-theme .container {
+            background: rgba(10, 20, 10, 0.85);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            box-shadow: 
+                0 0 30px rgba(255, 215, 0, 0.3),
+                0 0 60px rgba(198, 165, 0, 0.2),
+                inset 0 0 20px rgba(255, 215, 0, 0.1);
+        }
+        
+        .money-theme .header {
+            background: linear-gradient(135deg, #1a2e0a, #2a3e1a);
+            border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+        }
+        
+        .money-theme .header h1 {
+            color: #ffd700;
+            text-shadow: 
+                0 0 10px rgba(255, 215, 0, 0.8),
+                0 0 20px rgba(255, 215, 0, 0.5);
+        }
+        
+        .money-theme .header p {
+            color: #ffd700;
+        }
+        
+        .money-theme .form-group label {
+            color: #ffd700;
+        }
+        
+        .money-theme .form-group input:focus, .money-theme .form-group select:focus {
+            border-color: #ffd700;
+            box-shadow: 
+                0 0 15px rgba(255, 215, 0, 0.5),
+                0 0 30px rgba(255, 215, 0, 0.3);
+        }
+        
+        .money-theme .btn {
+            background: linear-gradient(135deg, #ffd700, #cc9900);
+        }
+        
+        .money-theme .btn:hover {
+            box-shadow: 
+                0 10px 25px rgba(255, 215, 0, 0.5),
+                0 0 30px rgba(255, 215, 0, 0.3);
+        }
+        
+        .money-theme .calc-display {
+            background: linear-gradient(135deg, #0a140a, #1a2e0a);
+            box-shadow: 
+                inset 0 0 20px rgba(0, 0, 0, 0.5),
+                0 0 30px rgba(255, 215, 0, 0.2);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+        
+        .money-theme .calc-display .current-operand {
+            text-shadow: 
+                0 0 10px rgba(255, 215, 0, 0.8),
+                0 0 20px rgba(255, 215, 0, 0.5);
+        }
+        
+        .money-theme .calc-btn {
+            background: linear-gradient(135deg, #1a2e0a, #2a3e1a);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+        
+        .money-theme .calc-btn:hover {
+            border-color: rgba(255, 215, 0, 0.6);
+            box-shadow: 
+                0 10px 25px rgba(0, 0, 0, 0.4),
+                0 0 30px rgba(255, 215, 0, 0.3);
+        }
+        
+        .money-theme .calc-btn.operator {
+            background: linear-gradient(135deg, #cc9900, #996600);
+        }
+        
+        .money-theme .calc-btn.operator:hover {
+            background: linear-gradient(135deg, #ddaa00, #aa7700);
+            box-shadow: 
+                0 10px 25px rgba(204, 153, 0, 0.4),
+                0 0 30px rgba(204, 153, 0, 0.3);
+        }
+        
+        .money-theme .calc-btn.equals {
+            background: linear-gradient(135deg, #ffd700, #cc9900);
+        }
+        
+        .money-theme .calc-btn.equals:hover {
+            background: linear-gradient(135deg, #ffe000, #ddaa00);
+            box-shadow: 
+                0 10px 25px rgba(255, 215, 0, 0.4),
+                0 0 30px rgba(255, 215, 0, 0.3);
+        }
+        
+        .money-theme .calc-btn.clear {
+            background: linear-gradient(135deg, #cc0000, #990000);
+        }
+        
+        .money-theme .calc-btn.clear:hover {
+            background: linear-gradient(135deg, #dd0000, #aa0000);
+            box-shadow: 
+                0 10px 25px rgba(204, 0, 0, 0.4),
+                0 0 30px rgba(204, 0, 0, 0.3);
+        }
+        
+        .money-theme .calc-btn.function {
+            background: linear-gradient(135deg, #cc9900, #996600);
+        }
+        
+        .money-theme .calc-btn.function:hover {
+            background: linear-gradient(135deg, #ddaa00, #aa7700);
+            box-shadow: 
+                0 10px 25px rgba(204, 153, 0, 0.4),
+                0 0 30px rgba(204, 153, 0, 0.3);
+        }
+        
+        .money-theme .calc-history {
+            background: rgba(10, 20, 10, 0.7);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+        
+        .money-theme .calc-history h3 {
+            color: #ffd700;
+        }
+        
+        .money-theme .history-item {
+            background: rgba(26, 46, 26, 0.7);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+        
+        .money-theme .history-item:hover {
+            border-color: rgba(255, 215, 0, 0.5);
+        }
+        
+        .money-theme .history-result {
+            color: #ffd700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+        
+        .money-theme .user-avatar {
+            background: linear-gradient(135deg, #ffd700, #cc9900);
+            box-shadow: 
+                0 8px 20px rgba(255, 215, 0, 0.5),
+                0 0 30px rgba(255, 215, 0, 0.3);
+        }
+        
+        .money-theme .user-details h3 {
+            color: #ffd700;
+        }
+        
+        .money-theme .clear-history {
+            border: 1px solid rgba(204, 0, 0, 0.5);
+            color: #cc0000;
+        }
+        
+        .money-theme .clear-history:hover {
+            background: rgba(204, 0, 0, 0.1);
+            color: #dd0000;
+            border-color: rgba(204, 0, 0, 0.8);
+        }
+        
+        /* Scientific Calculator Theme */
+        .scientific-theme {
+            background: #0a0a1a;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(120, 0, 198, 0.3), transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(0, 119, 255, 0.3), transparent 20%),
+                radial-gradient(circle at 50% 50%, rgba(0, 100, 255, 0.1), transparent 50%);
+        }
+        
+        .scientific-theme .container {
+            background: rgba(10, 10, 30, 0.85);
+            border: 1px solid rgba(0, 119, 255, 0.3);
+            box-shadow: 
+                0 0 30px rgba(0, 119, 255, 0.3),
+                0 0 60px rgba(0, 0, 255, 0.2),
+                inset 0 0 20px rgba(0, 119, 255, 0.1);
+        }
+        
+        .scientific-theme .header {
+            background: linear-gradient(135deg, #0a0a2e, #0a1a3e);
+            border-bottom: 1px solid rgba(0, 119, 255, 0.3);
+        }
+        
+        .scientific-theme .header h1 {
+            color: #00d9ff;
+            text-shadow: 
+                0 0 10px rgba(0, 119, 255, 0.8),
+                0 0 20px rgba(0, 119, 255, 0.5);
+        }
+        
+        .scientific-theme .header p {
+            color: #00d9ff;
+        }
+        
+        .scientific-theme .form-group label {
+            color: #00d9ff;
+        }
+        
+        .scientific-theme .form-group input:focus {
+            border-color: #00d9ff;
+            box-shadow: 
+                0 0 15px rgba(0, 119, 255, 0.5),
+                0 0 30px rgba(0, 119, 255, 0.3);
+        }
+        
+        .scientific-theme .btn {
+            background: linear-gradient(135deg, #00d9ff, #0066ff);
+        }
+        
+        .scientific-theme .btn:hover {
+            box-shadow: 
+                0 10px 25px rgba(0, 119, 255, 0.5),
+                0 0 30px rgba(0, 119, 255, 0.3);
+        }
+        
+        .scientific-theme .calc-display {
+            background: linear-gradient(135deg, #0a0a1a, #0a1a2e);
+            box-shadow: 
+                inset 0 0 20px rgba(0, 0, 50, 0.5),
+                0 0 30px rgba(0, 119, 255, 0.2);
+            border: 1px solid rgba(0, 119, 255, 0.3);
+        }
+        
+        .scientific-theme .calc-display .current-operand {
+            text-shadow: 
+                0 0 10px rgba(0, 119, 255, 0.8),
+                0 0 20px rgba(0, 119, 255, 0.5);
+        }
+        
+        .scientific-theme .calc-btn {
+            background: linear-gradient(135deg, #0a1a2e, #0a2a3e);
+            border: 1px solid rgba(0, 119, 255, 0.3);
+        }
+        
+        .scientific-theme .calc-btn:hover {
+            border-color: rgba(0, 119, 255, 0.6);
+            box-shadow: 
+                0 10px 25px rgba(0, 0, 50, 0.4),
+                0 0 30px rgba(0, 119, 255, 0.3);
+        }
+        
+        .scientific-theme .calc-btn.operator {
+            background: linear-gradient(135deg, #0066ff, #003d8b);
+        }
+        
+        .scientific-theme .calc-btn.operator:hover {
+            background: linear-gradient(135deg, #0077ff, #004da4);
+            box-shadow: 
+                0 10px 25px rgba(0, 119, 255, 0.4),
+                0 0 30px rgba(0, 119, 255, 0.3);
+        }
+        
+        .scientific-theme .calc-btn.equals {
+            background: linear-gradient(135deg, #00d9ff, #0099ff);
+        }
+        
+        .scientific-theme .calc-btn.equals:hover {
+            background: linear-gradient(135deg, #00e0ff, #00aaff);
+            box-shadow: 
+                0 10px 25px rgba(0, 119, 255, 0.4),
+                0 0 30px rgba(0, 119, 255, 0.3);
+        }
+        
+        .scientific-theme .calc-btn.clear {
+            background: linear-gradient(135deg, #ff7777, #ff3d3d);
+        }
+        
+        .scientific-theme .calc-btn.clear:hover {
+            background: linear-gradient(135deg, #ff8787, #ff4d4d);
+            box-shadow: 
+                0 10px 25px rgba(255, 119, 119, 0.4),
+                0 0 30px rgba(255, 119, 119, 0.3);
+        }
+        
+        .scientific-theme .calc-btn.function {
+            background: linear-gradient(135deg, #9977ff, #663dff);
+        }
+        
+        .scientific-theme .calc-btn.function:hover {
+            background: linear-gradient(135deg, #a787ff, #774dff);
+            box-shadow: 
+                0 10px 25px rgba(153, 119, 255, 0.4),
+                0 0 30px rgba(153, 119, 255, 0.3);
+        }
+        
+        .scientific-theme .calc-history {
+            background: rgba(10, 10, 30, 0.7);
+            border: 1px solid rgba(0, 119, 255, 0.3);
+        }
+        
+        .scientific-theme .calc-history h3 {
+            color: #00d9ff;
+        }
+        
+        .scientific-theme .history-item {
+            background: rgba(10, 26, 46, 0.7);
+            border: 1px solid rgba(0, 119, 255, 0.2);
+        }
+        
+        .scientific-theme .history-item:hover {
+            border-color: rgba(0, 119, 255, 0.5);
+        }
+        
+        .scientific-theme .history-result {
+            color: #00d9ff;
+            text-shadow: 0 0 10px rgba(0, 119, 255, 0.5);
+        }
+        
+        .scientific-theme .user-avatar {
+            background: linear-gradient(135deg, #00d9ff, #0066ff);
+            box-shadow: 
+                0 8px 20px rgba(0, 119, 255, 0.5),
+                0 0 30px rgba(0, 119, 255, 0.3);
+        }
+        
+        .scientific-theme .user-details h3 {
+            color: #00d9ff;
+        }
+        
+        .scientific-theme .clear-history {
+            border: 1px solid rgba(255, 119, 119, 0.5);
+            color: #ff7777;
+        }
+        
+        .scientific-theme .clear-history:hover {
+            background: rgba(255, 119, 119, 0.1);
+            color: #ff8787;
+            border-color: rgba(255, 119, 119, 0.8);
+        }
+        
+        /* Fraction Calculator Specific Styles */
+        .fraction-layout {
+            /* Remove display: none to allow visibility control via hidden class */
+        }
+        
+        .fraction-layout.active {
+            display: block;
+        }
+        
+        .fraction-input-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .fraction-display-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .fraction-display {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .fraction-display .numerator,
+        .fraction-display .denominator {
+            font-size: 36px;
+            font-family: 'Orbitron', sans-serif;
+            text-align: center;
+            width: 100px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(10, 10, 20, 0.7);
+            border: 1px solid rgba(255, 119, 198, 0.3);
+            border-radius: 8px;
+            margin: 5px 0;
+        }
+        
+        .fraction-line {
+            width: 80px;
+            height: 2px;
+            background: rgba(255, 119, 198, 0.8);
+            margin: 5px 0;
+        }
+        
+        .fraction-inputs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .fraction-inputs .form-group {
+            flex: 1;
+        }
+        
+        .fraction-functions {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        /* Money Converter Specific Styles */
+        .money-layout {
+            /* Remove display: none to allow visibility control via hidden class */
+        }
+        
+        .money-layout.active {
+            display: block;
+        }
+        
+        .money-converter {
+            background: rgba(10, 20, 10, 0.7);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .money-inputs {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .money-result {
+            background: rgba(10, 20, 10, 0.7);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 24px;
+            font-family: 'Orbitron', sans-serif;
+            color: #ffd700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+        
+        .money-functions {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .memory-functions {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .copy-btn {
+            padding: 10px;
+            font-size: 16px;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .money-result-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        /* Standard Calculator Specific Layout */
+        .standard-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .standard-memory-functions {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+        }
+        
+        /* Scientific Calculator Specific Layout */
+        .scientific-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .scientific-memory-functions {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+        }
+        
+        @media (max-width: 600px) {
+            .calc-buttons {
+                gap: 10px;
+            }
+            
+            .calc-btn {
+                padding: 20px;
+                font-size: 18px;
+            }
+            
+            .calc-display {
+                font-size: 28px;
+                min-height: 90px;
+            }
+            
+            .calc-display .current-operand {
+                font-size: 32px;
+            }
+            
+            .auth-container, .calculator {
+                padding: 30px 20px;
+            }
+            
+            .calc-type-selector {
+                flex-wrap: wrap;
+            }
+            
+            .calc-type-btn {
+                margin-bottom: 5px;
+                padding: 8px 12px;
+                font-size: 12px;
+            }
+            
+            .tooltip {
+                max-width: 200px;
+                font-size: 11px;
+                padding: 8px 12px;
+            }
+            
+            .fraction-inputs {
+                flex-direction: column;
+            }
+            
+            .fraction-functions {
+                grid-template-columns: 1fr;
+            }
+            
+            .money-functions {
+                grid-template-columns: 1fr;
+            }
+            
+            .memory-functions {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .standard-buttons, .scientific-buttons {
+                gap: 10px;
+            }
+            
+            .standard-memory-functions, .scientific-memory-functions {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                max-width: 100%;
+            }
+            
+            .header h1 {
+                font-size: 28px;
+            }
+            
+            .calc-btn {
+                padding: 15px;
+                font-size: 16px;
+            }
+            
+            .calc-display {
+                font-size: 24px;
+                min-height: 80px;
+            }
+            
+            .calc-display .current-operand {
+                font-size: 28px;
+            }
+            
+            .user-info {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .tooltip {
+                max-width: 150px;
+                font-size: 10px;
+                padding: 6px 10px;
+            }
+            
+            .memory-functions {
+                grid-template-columns: 1fr;
+            }
+            
+            .standard-memory-functions, .scientific-memory-functions {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-background"></div>
+    
+    <div class="container">
+        <div class="floating-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+        </div>
+        
+        <div class="header">
+            <h1 class="glitch">CALCULATOR</h1>
+            <p>ACCESS GRANTED TO AUTHORIZED USERS ONLY</p>
+        </div>
+        
+        <div id="auth-container" class="auth-container">
+            <div class="auth-tabs">
+                <div class="auth-tab active" id="login-tab">Login</div>
+                <div class="auth-tab" id="signup-tab">Sign Up</div>
+            </div>
+            
+            <div id="login-form" class="auth-form active">
+                <div class="form-group">
+                    <label for="login-username">Username</label>
+                    <input type="text" id="login-username" placeholder="Enter your username">
+                    <i class="fas fa-user"></i>
+                </div>
+                
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" placeholder="Enter your password">
+                    <i class="fas fa-lock"></i>
+                </div>
+                
+                <button id="login-btn" class="btn">
+                    <i class="fas fa-sign-in-alt"></i> Access System
+                </button>
+                
+                <div id="login-message" class="message hidden"></div>
+            </div>
+            
+            <div id="signup-form" class="auth-form">
+                <div class="form-group">
+                    <label for="signup-username">Username</label>
+                    <input type="text" id="signup-username" placeholder="Choose a username">
+                    <i class="fas fa-user"></i>
+                </div>
+                
+                <div class="form-group">
+                    <label for="signup-email">Email</label>
+                    <input type="email" id="signup-email" placeholder="Enter your email">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                
+                <div class="form-group">
+                    <label for="signup-password">Password</label>
+                    <input type="password" id="signup-password" placeholder="Create a password">
+                    <i class="fas fa-lock"></i>
+                    <div class="password-strength">
+                        <div class="password-strength-meter" id="strength-meter"></div>
+                    </div>
+                    <div class="password-requirements">
+                        <div class="requirement" id="length-req">
+                            <i class="fas fa-times-circle"></i> At least 8 characters
+                        </div>
+                        <div class="requirement" id="lowercase-req">
+                            <i class="fas fa-times-circle"></i> At least 1 lowercase letter
+                        </div>
+                        <div class="requirement" id="uppercase-req">
+                            <i class="fas fa-times-circle"></i> At least 1 uppercase letter
+                        </div>
+                        <div class="requirement" id="digit-req">
+                            <i class="fas fa-times-circle"></i> At least 1 digit
+                        </div>
+                        <div class="requirement" id="symbol-req">
+                            <i class="fas fa-times-circle"></i> At least 1 symbol
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="signup-confirm-password">Confirm Password</label>
+                    <input type="password" id="signup-confirm-password" placeholder="Confirm your password">
+                    <i class="fas fa-lock"></i>
+                </div>
+                
+                <button id="signup-btn" class="btn btn-success">
+                    <i class="fas fa-user-plus"></i> Create Profile
+                </button>
+                
+                <div id="signup-message" class="message hidden"></div>
+            </div>
+        </div>
+        
+        <div id="calculator" class="calculator">
+            <div class="user-info">
+                <div class="user-avatar" id="user-avatar">U</div>
+                <div class="user-details">
+                    <h3 id="user-name">User</h3>
+                    <p>CYBERCALC ACCESS LEVEL: PREMIUM</p>
+                </div>
+            </div>
+            
+            <!-- Calculator Type Selector -->
+            <div class="calc-type-selector">
+                <button class="calc-type-btn active" data-type="standard">
+                    <i class="fas fa-calculator"></i> Standard
+                    <div class="tooltip">Basic arithmetic operations: addition, subtraction, multiplication, division, square, square root, percentage, and more.</div>
+                </button>
+                <button class="calc-type-btn" data-type="fraction">
+                    <i class="fas fa-divide"></i> Fraction
+                    <div class="tooltip">Fraction calculator: input fractions with a/b button, simplify, convert to decimal/mixed numbers, and perform fraction operations.</div>
+                </button>
+                <button class="calc-type-btn" data-type="money">
+                    <i class="fas fa-coins"></i> Money
+                    <div class="tooltip">Currency converter: convert between USD, EUR, GBP, JPY. Calculate tax, tips, and discounts with financial operations.</div>
+                </button>
+                <button class="calc-type-btn" data-type="scientific">
+                    <i class="fas fa-flask"></i> Scientific
+                    <div class="tooltip">Scientific functions: trigonometry (sin, cos, tan), logarithms, factorial, power, absolute value, and mathematical constants.</div>
+                </button>
+            </div>
+            
+            <!-- Standard Calculator -->
+            <div id="standard-calculator" class="calculator-type">
+                <div class="calc-display">
+                    <div class="previous-operand" id="previous-operand"></div>
+                    <div class="current-operand" id="current-operand">0</div>
+                </div>
+                
+                <div class="standard-buttons">
+                    <button class="calc-btn clear" onclick="clearAll()">C</button>
+                    <button class="calc-btn function" onclick="deleteLast()">⌫</button>
+                    <button class="calc-btn function" onclick="toggleSign()">±</button>
+                    <button class="calc-btn operator" onclick="appendToDisplay('/')">/</button>
+                    
+                    <button class="calc-btn" onclick="appendToDisplay('7')">7</button>
+                    <button class="calc-btn" onclick="appendToDisplay('8')">8</button>
+                    <button class="calc-btn" onclick="appendToDisplay('9')">9</button>
+                    <button class="calc-btn operator" onclick="appendToDisplay('*')">×</button>
+                    
+                    <button class="calc-btn" onclick="appendToDisplay('4')">4</button>
+                    <button class="calc-btn" onclick="appendToDisplay('5')">5</button>
+                    <button class="calc-btn" onclick="appendToDisplay('6')">6</button>
+                    <button class="calc-btn operator" onclick="appendToDisplay('-')">-</button>
+                    
+                    <button class="calc-btn" onclick="appendToDisplay('1')">1</button>
+                    <button class="calc-btn" onclick="appendToDisplay('2')">2</button>
+                    <button class="calc-btn" onclick="appendToDisplay('3')">3</button>
+                    <button class="calc-btn operator" onclick="appendToDisplay('+')">+</button>
+                    
+                    <button class="calc-btn" onclick="appendToDisplay('0')">0</button>
+                    <button class="calc-btn" onclick="appendToDisplay('.')">.</button>
+                    <button class="calc-btn function" onclick="calculatePercentage()">%</button>
+                    <button class="calc-btn equals" onclick="calculate()">=</button>
+                    
+                    <button class="calc-btn function" onclick="calculateSquare()">x²</button>
+                    <button class="calc-btn function" onclick="calculateSquareRoot()">√</button>
+                    <button class="calc-btn function" onclick="calculateReciprocal()">1/x</button>
+                    <button class="calc-btn function" onclick="appendToDisplay('(')">(</button>
+                    
+                    <button class="calc-btn function" onclick="appendToDisplay(')')">)</button>
+                    <button class="calc-btn function" onclick="appendToDisplay('Math.PI')">π</button>
+                    <button class="calc-btn function" onclick="appendToDisplay('Math.E')">e</button>
+                    <button class="calc-btn function" onclick="calculatePower()">xʸ</button>
+                </div>
+                
+                <div class="standard-memory-functions">
+                    <button class="calc-btn function" onclick="appendToMemory()">M+</button>
+                    <button class="calc-btn function" onclick="recallMemory()">MR</button>
+                    <button class="calc-btn function" onclick="clearMemory()">MC</button>
+                    <button class="calc-btn function" onclick="appendLastAnswer()">ANS</button>
+                    <button class="calc-btn function copy-btn" onclick="copyResult()" title="Copy Result">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Fraction Calculator -->
+            <div id="fraction-calculator" class="calculator-type fraction-layout hidden">
+                <div class="fraction-display-container">
+                    <div class="fraction-display">
+                        <div class="numerator" id="fraction-numerator">0</div>
+                        <div class="fraction-line"></div>
+                        <div class="denominator" id="fraction-denominator">1</div>
+                    </div>
+                </div>
+                
+                <div class="fraction-inputs">
+                    <div class="form-group">
+                        <label for="numerator-input">Numerator</label>
+                        <input type="number" id="numerator-input" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="denominator-input">Denominator</label>
+                        <input type="number" id="denominator-input" value="1">
+                    </div>
+                    <button class="btn" onclick="setFraction()">Set Fraction</button>
+                </div>
+                
+                <div class="fraction-functions">
+                    <button class="calc-btn function" onclick="simplifyFraction()">Simplify</button>
+                    <button class="calc-btn function" onclick="convertToDecimal()">To Decimal</button>
+                    <button class="calc-btn function" onclick="convertToMixed()">To Mixed</button>
+                    <button class="calc-btn function" onclick="calculateFractionReciprocal()">Reciprocal</button>
+                    <button class="calc-btn function" onclick="calculateFractionPower()">Power</button>
+                    <button class="calc-btn function" onclick="convertDecimalToFraction()">Decimal to Fraction</button>
+                    <button class="calc-btn clear" onclick="clearAll()">Clear</button>
+                </div>
+                
+                <div class="memory-functions">
+                    <button class="calc-btn function" onclick="appendToMemory()">M+</button>
+                    <button class="calc-btn function" onclick="recallMemory()">MR</button>
+                    <button class="calc-btn function" onclick="clearMemory()">MC</button>
+                    <button class="calc-btn function" onclick="appendLastAnswer()">ANS</button>
+                    <button class="calc-btn function copy-btn" onclick="copyResult()" title="Copy Result">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Money Converter -->
+            <div id="money-calculator" class="calculator-type money-layout hidden">
+                <div class="money-converter">
+                    <div class="money-inputs">
+                        <div class="form-group">
+                            <label for="amount-input">Amount</label>
+                            <input type="number" id="amount-input" value="0" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label for="from-currency">From</label>
+                            <select id="from-currency">
+                                <option value="USD">USD</option>
+                                <option value="EUR">EUR</option>
+                                <option value="GBP">GBP</option>
+                                <option value="JPY">JPY</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="to-currency">To</label>
+                            <select id="to-currency">
+                                <option value="USD">USD</option>
+                                <option value="EUR">EUR</option>
+                                <option value="GBP">GBP</option>
+                                <option value="JPY">JPY</option>
+                            </select>
+                        </div>
+                        <button class="calc-btn function" onclick="swapCurrencies()" title="Swap Currencies">
+                            <i class="fas fa-exchange-alt"></i> Swap
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="money-result-container">
+                    <div class="money-result" id="conversion-result">Result: 0</div>
+                    <button class="calc-btn function copy-btn" onclick="copyResult()" title="Copy Result">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                </div>
+                
+                <div class="money-functions">
+                    <button class="calc-btn function" onclick="calculateTax()">Tax</button>
+                    <button class="calc-btn function" onclick="calculateTip()">Tip</button>
+                    <button class="calc-btn function" onclick="calculateDiscount()">Discount</button>
+                </div>
+                
+                <div class="memory-functions">
+                    <button class="calc-btn function" onclick="appendToMemory()">M+</button>
+                    <button class="calc-btn function" onclick="recallMemory()">MR</button>
+                    <button class="calc-btn function" onclick="clearMemory()">MC</button>
+                    <button class="calc-btn function" onclick="appendLastAnswer()">ANS</button>
+                    <button class="calc-btn function copy-btn" onclick="copyResult()" title="Copy Result">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Scientific Calculator -->
+            <div id="scientific-calculator" class="calculator-type hidden">
+                <div class="calc-display">
+                    <div class="previous-operand" id="previous-operand"></div>
+                    <div class="current-operand" id="current-operand">0</div>
+                </div>
+                
+                <div class="scientific-buttons">
+                    <button class="calc-btn clear" onclick="clearAll()">C</button>
+                    <button class="calc-btn function" onclick="deleteLast()">⌫</button>
+                    <button class="calc-btn function" onclick="toggleSign()">±</button>
+                    <button class="calc-btn operator" onclick="appendToDisplay('/')">/</button>
+                    
+                    <button class="calc-btn" onclick="appendToDisplay('7')">7</button>
+                    <button class="calc-btn" onclick="appendToDisplay('8')">8</button>
+                    <button class="calc-btn" onclick="appendToDisplay('9')">9</button>
+                    <button class="calc-btn operator" onclick="appendToDisplay('*')">×</button>
+                    
+                    <button class="calc-btn" onclick="appendToDisplay('4')">4</button>
+                    <button class="calc-btn" onclick="appendToDisplay('5')">5</button>
+                    <button class="calc-btn" onclick="appendToDisplay('6')">6</button>
+                    <button class="calc-btn operator" onclick="appendToDisplay('-')">-</button>
+                    
+                    <button class="calc-btn" onclick="appendToDisplay('1')">1</button>
+                    <button class="calc-btn" onclick="appendToDisplay('2')">2</button>
+                    <button class="calc-btn" onclick="appendToDisplay('3')">3</button>
+                    <button class="calc-btn operator" onclick="appendToDisplay('+')">+</button>
+                    
+                    <button class="calc-btn" onclick="appendToDisplay('0')">0</button>
+                    <button class="calc-btn" onclick="appendToDisplay('.')">.</button>
+                    <button class="calc-btn function" onclick="calculatePercentage()">%</button>
+                    <button class="calc-btn equals" onclick="calculate()">=</button>
+                    
+                    <button class="calc-btn function" onclick="calculateSin()">sin</button>
+                    <button class="calc-btn function" onclick="calculateCos()">cos</button>
+                    <button class="calc-btn function" onclick="calculateTan()">tan</button>
+                    <button class="calc-btn function" onclick="calculateLog()">log</button>
+                    
+                    <button class="calc-btn function" onclick="calculateLn()">ln</button>
+                    <button class="calc-btn function" onclick="calculateFactorial()">n!</button>
+                    <button class="calc-btn function" onclick="appendToDisplay('Math.PI')">π</button>
+                    <button class="calc-btn function" onclick="appendToDisplay('Math.E')">e</button>
+                    
+                    <button class="calc-btn function" onclick="calculatePower()">xʸ</button>
+                    <button class="calc-btn function" onclick="calculateSquareRoot()">√</button>
+                    <button class="calc-btn function" onclick="calculateAbsolute()">|x|</button>
+                    <button class="calc-btn function" onclick="calculateInverse()">x⁻¹</button>
+                </div>
+                
+                <div class="scientific-memory-functions">
+                    <button class="calc-btn function" onclick="appendToMemory()">M+</button>
+                    <button class="calc-btn function" onclick="recallMemory()">MR</button>
+                    <button class="calc-btn function" onclick="clearMemory()">MC</button>
+                    <button class="calc-btn function" onclick="appendLastAnswer()">ANS</button>
+                    <button class="calc-btn function copy-btn" onclick="copyResult()" title="Copy Result">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="calc-history">
+                <h3><i class="fas fa-history"></i> CALCULATION LOG</h3>
+                <div id="history-list"></div>
+                <button class="clear-history" onclick="clearHistory()">
+                    <i class="fas fa-trash-alt"></i> Clear Log
+                </button>
+            </div>
+            
+            <button id="logout-btn" class="btn btn-danger logout-btn">
+                <i class="fas fa-sign-out-alt"></i> Log Out
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // DOM elements
+        const authContainer = document.getElementById('auth-container');
+        const calculator = document.getElementById('calculator');
+        const loginTab = document.getElementById('login-tab');
+        const signupTab = document.getElementById('signup-tab');
+        const loginForm = document.getElementById('login-form');
+        const signupForm = document.getElementById('signup-form');
+        const loginBtn = document.getElementById('login-btn');
+        const signupBtn = document.getElementById('signup-btn');
+        const logoutBtn = document.getElementById('logout-btn');
+        const loginMessage = document.getElementById('login-message');
+        const signupMessage = document.getElementById('signup-message');
+        const previousOperand = document.getElementById('previous-operand');
+        const currentOperand = document.getElementById('current-operand');
+        const historyList = document.getElementById('history-list');
+        const userAvatar = document.getElementById('user-avatar');
+        const userName = document.getElementById('user-name');
+        const signupPassword = document.getElementById('signup-password');
+        const strengthMeter = document.getElementById('strength-meter');
+        const lengthReq = document.getElementById('length-req');
+        const lowercaseReq = document.getElementById('lowercase-req');
+        const uppercaseReq = document.getElementById('uppercase-req');
+        const digitReq = document.getElementById('digit-req');
+        const symbolReq = document.getElementById('symbol-req');
+        
+        // Calculator type selector
+        const calcTypeBtns = document.querySelectorAll('.calc-type-btn');
+        const body = document.body;
+        const standardCalculator = document.getElementById('standard-calculator');
+        const fractionCalculator = document.getElementById('fraction-calculator');
+        const moneyCalculator = document.getElementById('money-calculator');
+        const scientificCalculator = document.getElementById('scientific-calculator');
+        
+        // Fraction calculator elements
+        const fractionNumerator = document.getElementById('fraction-numerator');
+        const fractionDenominator = document.getElementById('fraction-denominator');
+        const numeratorInput = document.getElementById('numerator-input');
+        const denominatorInput = document.getElementById('denominator-input');
+        
+        // Money converter elements
+        const amountInput = document.getElementById('amount-input');
+        const fromCurrency = document.getElementById('from-currency');
+        const toCurrency = document.getElementById('to-currency');
+        const conversionResult = document.getElementById('conversion-result');
+        
+        // Tab switching
+        loginTab.addEventListener('click', function() {
+            loginTab.classList.add('active');
+            signupTab.classList.remove('active');
+            loginForm.classList.add('active');
+            signupForm.classList.remove('active');
+        });
+        
+        signupTab.addEventListener('click', function() {
+            signupTab.classList.add('active');
+            loginTab.classList.remove('active');
+            signupForm.classList.add('active');
+            loginForm.classList.remove('active');
+        });
+        
+        // User storage (localStorage for demo purposes)
+        let users = JSON.parse(localStorage.getItem('calculatorUsers')) || [];
+        
+        // Password strength checker
+        signupPassword.addEventListener('input', function() {
+            const password = signupPassword.value;
+            
+            // Check requirements
+            const lengthValid = password.length >= 8;
+            const lowercaseValid = /[a-z]/.test(password);
+            const uppercaseValid = /[A-Z]/.test(password);
+            const digitValid = /[0-9]/.test(password);
+            const symbolValid = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
+            
+            // Update requirement indicators
+            updateRequirement(lengthReq, lengthValid);
+            updateRequirement(lowercaseReq, lowercaseValid);
+            updateRequirement(uppercaseReq, uppercaseValid);
+            updateRequirement(digitReq, digitValid);
+            updateRequirement(symbolReq, symbolValid);
+            
+            // Calculate strength
+            const validCount = [lengthValid, lowercaseValid, uppercaseValid, digitValid, symbolValid].filter(Boolean).length;
+            const strengthPercentage = (validCount / 5) * 100;
+            
+            // Update strength meter
+            strengthMeter.style.width = `${strengthPercentage}%`;
+            
+            // Set color based on strength
+            if (strengthPercentage < 40) {
+                strengthMeter.style.background = '#ff3d3d'; // Red
+            } else if (strengthPercentage < 80) {
+                strengthMeter.style.background = '#ff773d'; // Orange
+            } else {
+                strengthMeter.style.background = '#2ecc71'; // Green
+            }
+        });
+        
+        function updateRequirement(element, isValid) {
+            if (isValid) {
+                element.classList.add('valid');
+                element.querySelector('i').className = 'fas fa-check-circle';
+            } else {
+                element.classList.remove('valid');
+                element.querySelector('i').className = 'fas fa-times-circle';
+            }
+        }
+        
+        // Signup functionality
+        signupBtn.addEventListener('click', function() {
+            const username = document.getElementById('signup-username').value;
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            const confirmPassword = document.getElementById('signup-confirm-password').value;
+            
+            // Validation
+            if (!username || !email || !password || !confirmPassword) {
+                showMessage('All fields required for profile creation', 'error', signupMessage);
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                showMessage('Password confirmation mismatch', 'error', signupMessage);
+                return;
+            }
+            
+            // Password strength validation
+            const lengthValid = password.length >= 8;
+            const lowercaseValid = /[a-z]/.test(password);
+            const uppercaseValid = /[A-Z]/.test(password);
+            const digitValid = /[0-9]/.test(password);
+            const symbolValid = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
+            
+            if (!lengthValid || !lowercaseValid || !uppercaseValid || !digitValid || !symbolValid) {
+                showMessage('Password does not meet security requirements', 'error', signupMessage);
+                return;
+            }
+            
+            if (users.some(user => user.username === username)) {
+                showMessage('Username already exists in system', 'error', signupMessage);
+                return;
+            }
+            
+            // Create new user
+            const newUser = {
+                username: username,
+                email: email,
+                password: password // In a real app, this would be hashed
+            };
+            
+            users.push(newUser);
+            localStorage.setItem('calculatorUsers', JSON.stringify(users));
+            
+            showMessage('Profile created successfully. Please login to access system.', 'success', signupMessage);
+            
+            // Clear form
+            document.getElementById('signup-username').value = '';
+            document.getElementById('signup-email').value = '';
+            document.getElementById('signup-password').value = '';
+            document.getElementById('signup-confirm-password').value = '';
+            
+            // Reset password strength meter
+            strengthMeter.style.width = '0';
+            updateRequirement(lengthReq, false);
+            updateRequirement(lowercaseReq, false);
+            updateRequirement(uppercaseReq, false);
+            updateRequirement(digitReq, false);
+            updateRequirement(symbolReq, false);
+            
+            // Switch to login tab
+            setTimeout(() => {
+                loginTab.click();
+            }, 1500);
+        });
+        
+        // Login functionality
+        loginBtn.addEventListener('click', function() {
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+            
+            // Find user
+            const user = users.find(u => u.username === username && u.password === password);
+            
+            if (user) {
+                // Successful login
+                authContainer.style.display = 'none';
+                calculator.style.display = 'block';
+                loginMessage.textContent = '';
+                
+                // Set user info
+                userName.textContent = user.username.toUpperCase();
+                userAvatar.textContent = user.username.charAt(0).toUpperCase();
+            } else {
+                showMessage('Access denied. Invalid credentials.', 'error', loginMessage);
+            }
+        });
+        
+        // Logout functionality
+        logoutBtn.addEventListener('click', function() {
+            authContainer.style.display = 'block';
+            calculator.style.display = 'none';
+            document.getElementById('login-username').value = '';
+            document.getElementById('login-password').value = '';
+            currentOperand.textContent = '0';
+            previousOperand.textContent = '';
+            shouldResetScreen = false;
+        });
+        
+        // Calculator type selector functionality
+        calcTypeBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Remove active class from all buttons
+                calcTypeBtns.forEach(b => b.classList.remove('active'));
+                
+                // Add active class to clicked button
+                this.classList.add('active');
+                
+                // Get calculator type
+                const calcType = this.getAttribute('data-type');
+                
+                // Remove all theme classes
+                body.classList.remove('standard-theme', 'fraction-theme', 'money-theme', 'scientific-theme');
+                
+                // Hide all calculators
+                standardCalculator.classList.add('hidden');
+                fractionCalculator.classList.add('hidden');
+                moneyCalculator.classList.add('hidden');
+                scientificCalculator.classList.add('hidden');
+                
+                // Add selected theme class and show appropriate calculator
+                if (calcType === 'standard') {
+                    body.classList.add('standard-theme');
+                    standardCalculator.classList.remove('hidden');
+                    document.querySelector('.header h1').textContent = 'CALCULATOR';
+                    document.querySelector('.header p').textContent = 'ACCESS GRANTED TO AUTHORIZED USERS ONLY';
+                    document.querySelector('.user-details p').textContent = 'CYBERCALC ACCESS LEVEL: PREMIUM';
+                    currentCalculatorType = 'standard';
+                } else if (calcType === 'fraction') {
+                    body.classList.add('fraction-theme');
+                    fractionCalculator.classList.remove('hidden');
+                    document.querySelector('.header h1').textContent = 'FRACTION';
+                    document.querySelector('.header p').textContent = 'PRECISION FRACTIONAL COMPUTATION';
+                    document.querySelector('.user-details p').textContent = 'FRACTION ACCESS LEVEL: MATHEMATICAL';
+                    currentCalculatorType = 'fraction';
+                } else if (calcType === 'money') {
+                    body.classList.add('money-theme');
+                    moneyCalculator.classList.remove('hidden');
+                    document.querySelector('.header h1').textContent = 'MONEY';
+                    document.querySelector('.header p').textContent = 'CURRENCY CONVERSION SYSTEM';
+                    document.querySelector('.user-details p').textContent = 'FINANCIAL ACCESS LEVEL: ANALYST';
+                    currentCalculatorType = 'money';
+                    // Trigger initial conversion
+                    convertCurrency();
+                } else if (calcType === 'scientific') {
+                    body.classList.add('scientific-theme');
+                    scientificCalculator.classList.remove('hidden');
+                    document.querySelector('.header h1').textContent = 'SCIENTIFIC';
+                    document.querySelector('.header p').textContent = 'ADVANCED COMPUTATIONAL SYSTEM';
+                    document.querySelector('.user-details p').textContent = 'SCIENTIFIC ACCESS LEVEL: RESEARCH';
+                    currentCalculatorType = 'scientific';
+                }
+            });
+        });
+        
+        // Allow Enter key to submit forms
+        document.getElementById('login-password').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                loginBtn.click();
+            }
+        });
+        
+        document.getElementById('signup-confirm-password').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                signupBtn.click();
+            }
+        });
+        
+        // Calculator state
+        let shouldResetScreen = false;
+        let currentExpression = '';
+        let history = [];
+        let memory = 0;
+        let lastAnswer = 0;
+        let currentCalculatorType = 'standard';
+        let isFractionInput = false;
+        let currentCurrency = 'USD';
+        let exchangeRates = {
+            USD: { EUR: 0.85, GBP: 0.73, JPY: 110.0 },
+            EUR: { USD: 1.18, GBP: 0.86, JPY: 129.5 },
+            GBP: { USD: 1.37, EUR: 1.16, JPY: 150.5 },
+            JPY: { USD: 0.0091, EUR: 0.0077, GBP: 0.0066 }
+        };
+        
+        // Calculator functions
+        function appendToDisplay(value) {
+            if (shouldResetScreen) {
+                currentOperand.textContent = '';
+                shouldResetScreen = false;
+            }
+            
+            if (currentOperand.textContent === '0' && value !== '.') {
+                currentOperand.textContent = value;
+            } else {
+                currentOperand.textContent += value;
+            }
+        }
+        
+        function clearAll() {
+            currentOperand.textContent = '0';
+            previousOperand.textContent = '';
+            currentExpression = '';
+            shouldResetScreen = false;
+            isFractionInput = false;
+            
+            // Clear fraction display if on fraction calculator
+            if (currentCalculatorType === 'fraction') {
+                fractionNumerator.textContent = '0';
+                fractionDenominator.textContent = '1';
+                numeratorInput.value = '0';
+                denominatorInput.value = '1';
+            }
+            
+            // Clear money converter if on money calculator
+            if (currentCalculatorType === 'money') {
+                amountInput.value = '0';
+                conversionResult.textContent = 'Result: 0';
+            }
+        }
+        
+        function deleteLast() {
+            if (currentOperand.textContent.length > 1) {
+                currentOperand.textContent = currentOperand.textContent.slice(0, -1);
+            } else {
+                currentOperand.textContent = '0';
+            }
+        }
+        
+        function calculate() {
+            try {
+                // Replace × with * for evaluation
+                const expression = currentOperand.textContent.replace(/×/g, '*');
+                const result = eval(expression);
+                
+                // Handle division by zero and other errors
+                if (!isFinite(result)) {
+                    currentOperand.textContent = 'ERROR';
+                    shouldResetScreen = true;
+                    return;
+                }
+                
+                // Store last answer
+                lastAnswer = result;
+                
+                // Add to history
+                addToHistory(expression, result);
+                
+                // Update display
+                previousOperand.textContent = `${currentOperand.textContent} =`;
+                currentOperand.textContent = formatResult(result);
+                shouldResetScreen = true;
+            } catch (error) {
+                currentOperand.textContent = 'ERROR';
+                shouldResetScreen = true;
+            }
+        }
+        
+        function calculateSquare() {
+            try {
+                const value = parseFloat(currentOperand.textContent);
+                const result = value * value;
+                
+                // Store last answer
+                lastAnswer = result;
+                
+                addToHistory(`${value}²`, result);
+                
+                previousOperand.textContent = `${value}² =`;
+                currentOperand.textContent = formatResult(result);
+                shouldResetScreen = true;
+            } catch (error) {
+                currentOperand.textContent = 'ERROR';
+                shouldResetScreen = true;
+            }
+        }
+        
+        function calculateSquareRoot() {
+            try {
+                const value = parseFloat(currentOperand.textContent);
+                if (value < 0) {
+                    currentOperand.textContent = 'ERROR';
+                    shouldResetScreen = true;
+                    return;
+                }
+                
+                const result = Math.sqrt(value);
+                
+                // Store last answer
+                lastAnswer = result;
+                
+                addToHistory(`√${value}`, result);
+                
+                previousOperand.textContent = `√${value} =`;
+                currentOperand.textContent = formatResult(result);
+                shouldResetScreen = true;
+            } catch (error) {
+                currentOperand.textContent = 'ERROR';
+                shouldResetScreen = true;
+            }
+        }
+        
+        function calculateReciprocal() {
+            try {
+                const value = parseFloat(currentOperand.textContent);
+                if (value === 0) {
+                    currentOperand.textContent = 'ERROR';
+                    shouldResetScreen = true;
+                    return;
+                }
+                
+                const result = 1 / value;
+                
+                // Store last answer
+                lastAnswer = result;
+                
+                addToHistory(`1/${value}`, result);
+                
+                previousOperand.textContent = `1/${value} =`;
+                currentOperand.textContent = formatResult(result);
+                shouldResetScreen = true;
+            } catch (error) {
+                currentOperand.textContent = 'ERROR';
+                shouldResetScreen = true;
+            }
+        }
+        
+        function calculatePercentage() {
+            try {
+                const value = parseFloat(currentOperand.textContent);
+                const result = value / 100;
+                
+                // Store last answer
+                lastAnswer = result;
+                
+                addToHistory(`${value}%`, result);
+                
+                previousOperand.textContent = `${value}% =`;
+                currentOperand.textContent = formatResult(result);
+                shouldResetScreen = true;
+            } catch (error) {
+                currentOperand.textContent = 'ERROR';
+                shouldResetScreen = true;
+            }
+        }
+        
+        function calculatePower() {
+            try {
+                const base = parseFloat(currentOperand.textContent);
+                const exponent = prompt("Enter the exponent (power):");
+                
+                if (exponent === null) return;
+                
+                const result = Math.pow(base, parseFloat(exponent));
+                
+                // Store last answer
+                lastAnswer = result;
+                
+                addToHistory(`${base}^${exponent}`, result);
+                
+                previousOperand.textContent = `${base}^${exponent} =`;
+                currentOperand.textContent = formatResult(result);
+                shouldResetScreen = true;
+            } catch (error) {
+                currentOperand.textContent = 'ERROR';
+                shouldResetScreen = true;
+            }
+        }
+        
+        function toggleSign() {
+            const value = parseFloat(currentOperand.textContent);
+            if (value > 0) {
+                currentOperand.textContent = '-' + currentOperand.textContent;
+            } else if (value < 0) {
+                currentOperand.textContent = currentOperand.textContent.slice(1);
+            }
+        }
+        
+        // Fraction Calculator Functions
+        function setFraction() {
+            const numerator = numeratorInput.value;
+            const denominator = denominatorInput.value;
+            
+            if (denominator === '0') {
+                showMessage('Denominator cannot be zero', 'error', loginMessage);
+                return;
+            }
+            
+            fractionNumerator.textContent = numerator;
+            fractionDenominator.textContent = denominator;
+            
+            // Update currentOperand for consistency with existing functions
+            currentOperand.textContent = `${numerator}/${denominator}`;
+            isFractionInput = true;
+        }
+        
+        function calculateFraction() {
+            try {
+                let result;
+                
+                if (isFractionInput) {
+                    // Parse fraction
+                    const numerator = parseFloat(fractionNumerator.textContent);
+                    const denominator = parseFloat(fractionDenominator.textContent);
+                    if (denominator !== 0) {
+                        result = numerator / denominator;
+                    } else {
+                        currentOperand.textContent = 'ERROR';
+                        shouldResetScreen = true;
+                        return;
+                    }
+                } else {
+                    // Evaluate expression
+                    const expression = currentOperand.textContent.replace(/×/g, '*');
+                    result = eval(expression);
+                }
+                
+                if (!isFinite(result)) {
+                    currentOperand.textContent = 'ERROR';
+                    shouldResetScreen = true;
+                    return;
+                }
+                
+                lastAnswer = result;
+                addToHistory(currentOperand.textContent, result);
+                
+                previousOperand.textContent = `${currentOperand.textContent} =`;
+                currentOperand.textContent = formatResult(result);
+                shouldResetScreen = true;
+                isFractionInput = false;
+            } catch (error) {
+                currentOperand.textContent = 'ERROR';
+                shouldResetScreen = true;
+            }
+        }
+        
+        function simplifyFraction() {
+            try {
+                const numerator = parseInt(fractionNumerator.textContent);
+                const denominator = parseInt(fractionDenominator.textContent);
+                
+                if (denominator === 0) {
+                    currentOperand.textContent = 'ERROR';
+                    shouldResetScreen = true;
+                    return;
+                }
+                
+                // Find greatest common divisor
+                const gcd = (a, b) => {
+                    return b === 0 ? a : gcd(b, a % b);
+                };
+                
+                const divisor = gcd(Math.abs(numerator), Math.abs(denominator));
+                const simplifiedNumerator = numerator / divisor;
+                const simplifiedDenominator = denominator / divisor;
+                
+                // Handle negative signs
+                if (simplifiedDenominator < 0) {
+                    simplifiedNumerator *= -1;
+                    simplifiedDenominator *= -1;
+                }
+                
+                fractionNumerator.textContent = simplifiedNumerator;
+                fractionDenominator.textContent = simplifiedDenominator;
+                numeratorInput.value = simplifiedNumerator;
+                denominatorInput.value = simplifiedDenominator;
+                
+                addToHistory(`Simplify(${numerator}/${denominator})`, `${simplifiedNumerator}/${simplifiedDenominator}`);
+            } catch (error) {
+                currentOperand.textContent = 'ERROR';
+                shouldResetScreen = true;
+            }
+        }
+        
+        function convertToDecimal() {
+            try {
+                const numerator = parseFloat(fractionNumerator.textContent);
+                const denominator = parseFloat(fractionDenominator.textContent);
+                
+                if (denominator === 0) {
+                    currentOperand.textContent = 'ERROR';
+                    shouldResetScreen = true;
+                    return;
+                }
+                
+                const result = numerator / denominator;
+                lastAnswer = result;
+                
+                addToHistory(`${numerator}/${denominator} to decimal`, result);
+                
+                previousOperand.textContent = `${numerator}/${denominator} =`;
+                currentOperand.textContent = formatResult(result);
+                shouldResetScreen = true;
+                isFractionInput = false;
+            } catch (error) {
+                currentOperand.textContent = 'ERROR';
+                shouldResetScreen = true;
+            }
+        }
+        
+        function convertToMixed() {
+            try {
+                const numerator = parseInt(fractionNumerator.textContent);
+                const denominator = parseInt(fractionDenominator.textContent);
+                
+                if (denominator === 0) {
+                    currentOperand.textContent = 'ERROR';
+                    shouldResetScreen = true;
+                    return;
+                }
+                
+                const wholeNumber = Math.floor(numerator / denominator);
+                const remainder = numerator % denominator;
+                
+                let result = '';
+                if (wholeNumber !== 0) {
+                    result += wholeNumber;
+                    if (remainder !== 0) {
+                        result += ` ${Math.abs(remainder)}/${denominator}`;
+                    }
+                } else if (remainder !== 0) {
+                    result = `${remainder}/${denominator}`;
+                } else {
+                    result = '0';
+                }
+                
+                addToHistory(`${numerator}/${denominator} to mixed`, result);
+                
+                previousOperand.textContent = `${numerator}/${denominator} =`;
+                currentOperand.textContent = result;
+                shouldResetScreen = true;
+            } catch (error) {
+                currentOperand.textContent = 'ERROR';
+                shouldResetScreen = true;
+            }
+        }
+        
+        function calculateFractionPower() {
+            try {
+                const numerator = parseFloat(fractionNumerator.textContent);
+                const denominator = parseFloat(fractionDenominator.textContent);
+                let base;
+                
+                if (denominator !== 0) {
+                    base = numerator / denominator;
+                } else {
+                    currentOperand.textContent = 'ERROR';
+                    shouldResetScreen = true;
+                    return;
+                }
+                
+                const exponent = prompt("Enter the exponent (power):");
+                
+                if (exponent === null) return;
+                
+                const result = Math.pow(base, parseFloat(exponent));
+                
+                lastAnswer = result;
+                addToHistory(`${base}^${exponent}`, result);
+                
+                previousOperand.textContent = `${base}^${exponent} =`;
+                currentOperand.textContent = formatResult(result);
+                shouldResetScreen = true;
+                isFractionInput = false;
+            } catch (error) {
+                currentOperand.textContent = 'ERROR';
+                shouldResetScreen = true;
+            }
+        }
+        
+        function calculateFractionReciprocal() {
+            try {
+                const numerator = parseFloat(fractionNumerator.textContent);
+                const denominator = parseFloat(fractionDenominator.textContent);
+                
+                if (numerator === 0) {
+                    currentOperand.textContent = 'ERROR';
+                    shouldResetScreen = true;
+                    return;
+                }
+                
+                // Swap numerator and denominator for reciprocal
+                fractionNumerator.textContent = denominator;
+                fractionDenominator.textContent = numerator;
+                numeratorInput.value = denominator;
+                denominatorInput.value = numerator;
+                
+                addToHistory(`Reciprocal(${numerator}/${denominator})`, `${denominator}/${numerator}`);
+            } catch (error) {
+                currentOperand.textContent = 'ERROR';
+                shouldResetScreen = true;
+            }
+        }
+        
+        function convertDecimalToFraction() {
+            try {
+                const decimal = parseFloat(currentOperand.textContent);
+                if (isNaN(decimal)) {
+                    throw new Error('Invalid decimal');
+                }
+
+                // Handle integer case
+                if (Number.isInteger(decimal)) {
+                    fractionNumerator.textContent = decimal;
+                    fractionDenominator.textContent = '1';
+                    numeratorInput.value = decimal;
+                    denominatorInput.value = '1';
+                    return;
+                }
+
+                // Convert decimal to fraction
+                const tolerance = 1.0E-10;
+                let numerator = 1;
+                let denominator = 1;
+                let h1 = 1;
+                let h2 = 0;
+                let k1 = 0;
+                let k2 = 1;
+                let b = decimal;
+                
+                do {
+                    let a = Math.floor(b);
+                    let aux = h1;
+                    h1 = a * h1 + h2;
+                    h2 = aux;
+                    aux = k1;
+                    k1 = a * k1 + k2;
+                    k2 = aux;
+                    b = 1 / (b - a);
+                } while (Math.abs(decimal - h1 / k1) > decimal * tolerance);
+
+                numerator = h1;
+                denominator = k1;
+
+                // Simplify the fraction
+                const gcd = (a, b) => {
+                    return b === 0 ? a : gcd(b, a % b);
+                };
+                
+                const divisor = gcd(Math.abs(numerator), Math.abs(denominator));
+                numerator /= divisor;
+                denominator /= divisor;
+
+                // Handle negative signs
+                if (denominator < 0) {
+                    numerator *= -1;
+                    denominator *= -1;
+                }
+
+                fractionNumerator.textContent = numerator;
+                fractionDenominator.textContent = denominator;
+                numeratorInput.value = numerator;
+                denominatorInput.value = denominator;
+
+                addToHistory(`Convert ${decimal} to fraction`, `${numerator}/${denominator}`);
+            } catch (error) {
+                currentOperand.textContent = 'ERROR';
+                shouldResetScreen = true;
+            }
+        }
+        
+        // Money Converter Functions
+        function swapCurrencies() {
+            const fromValue = fromCurrency.value;
+            const toValue = toCurrency.value;
+            
+            fromCurrency.value = toValue;
+            toCurrency.value = fromValue;
+            
+            // Trigger conversion
+            convertCurrency();
+        }
+        
+        async function fetchExchangeRates(baseCurrency) {
+            try {
+                const response = await fetch(`https://open.er-api.com/v6/latest/${baseCurrency}`);
+                const data = await response.json();
+                if (data.result === 'success') {
+                    return data.rates;
+                } else {
+                    throw new Error('API returned unsuccessful result');
+                }
+            } catch (error) {
+                console.error('Error fetching exchange rates:', error);
+                // Fallback to hardcoded rates
+                return exchangeRates[baseCurrency] || {};
+            }
+        }
+        
+        async function convertCurrency() {
+            try {
+                const amount = parseFloat(amountInput.value);
+                const from = fromCurrency.value;
+                const to = toCurrency.value;
+                
+                if (isNaN(amount)) {
+                    conversionResult.textContent = 'Result: Invalid amount';
+                    return;
+                }
+                
+                if (from === to) {
+                    conversionResult.textContent = `Result: ${amount} ${to}`;
+                    lastAnswer = amount;
+                    return;
+                }
+                
+                // Try to fetch exchange rates from API
+                let rates;
+                try {
+                    rates = await fetchExchangeRates(from);
+                } catch (error) {
+                    // Fallback to hardcoded rates
+                    rates = exchangeRates[from] || {};
+                }
+                
+                const rate = rates[to];
+                if (rate === undefined) {
+                    conversionResult.textContent = 'Result: Rate not available';
+                    return;
+                }
+                
+                const result = amount * rate;
+                
+                lastAnswer = result;
+                addToHistory(`${amount} ${from} to ${to}`, `${formatResult(result)} ${to}`);
+                
+                conversionResult.textContent = `Result: ${formatResult(result)} ${to}`;
+            } catch (error) {
+                console.error('Conversion error:', error);
+                conversionResult.textContent = 'Result: Conversion error';
+            }
+        }
+        
+        function calculateTax() {
+            try {
+                const amount = parseFloat(amountInput.value);
+                if (isNaN(amount)) {
+                    showMessage('Please enter a valid amount', 'error', loginMessage);
+                    return;
+                }
+                
+                const taxRate = prompt('Enter tax rate (e.g., 8.5 for 8.5%):');
+                if (taxRate === null) return;
+                
+                const rate = parseFloat(taxRate) / 100;
+                const taxAmount = amount * rate;
+                const total = amount + taxAmount;
+                
+                lastAnswer = total;
+                addToHistory(`Tax on ${amount} at ${taxRate}%`, formatResult(total));
+                
+                conversionResult.textContent = `Tax: ${formatResult(taxAmount)} | Total: ${formatResult(total)}`;
+            } catch (error) {
+                showMessage('Tax calculation error', 'error', loginMessage);
+            }
+        }
+        
+        function calculateTip() {
+            try {
+                const amount = parseFloat(amountInput.value);
+                if (isNaN(amount)) {
+                    showMessage('Please enter a valid amount', 'error', loginMessage);
+                    return;
+                }
+                
+                const tipRate = prompt('Enter tip percentage (e.g., 15 for 15%):');
+                if (tipRate === null) return;
+                
+                const rate = parseFloat(tipRate) / 100;
+                const tipAmount = amount * rate;
+                const total = amount + tipAmount;
+                
+                lastAnswer = total;
+                addToHistory(`Tip on ${amount} at ${tipRate}%`, formatResult(total));
+                
+                conversionResult.textContent = `Tip: ${formatResult(tipAmount)} | Total: ${formatResult(total)}`;
+            } catch (error) {
+                showMessage('Tip calculation error', 'error', loginMessage);
+            }
+        }
+        
+        function calculateDiscount() {
+            try {
+                const amount = parseFloat(amountInput.value);
+                if (isNaN(amount)) {
+                    showMessage('Please enter a valid amount', 'error', loginMessage);
+                    return;
+                }
+                
+                const discountRate = prompt('Enter discount percentage (e.g., 20 for 20%):');
+                if (discountRate === null) return;
+                
+                const rate = parseFloat(discountRate) / 100;
+                const discountAmount = amount * rate;
+                const total = amount - discountAmount;
+                
+                lastAnswer = total;
+                addToHistory(`Discount on ${amount} at ${discountRate}%`, formatResult(total));
+                
+                conversionResult.textContent = `Discount: ${formatResult(discountAmount)} | Total: ${formatResult(total)}`;
+            } catch (error) {
+                showMessage('Discount calculation error', 'error', loginMessage);
+            }
+        }
+        
+        // Scientific Calculator Functions
+        function calculateSin() {
+            try {
+                const value = parseFloat(currentOperand.textContent);
+                const result = Math.sin(value * Math.PI / 180); // Convert to radians
+                
+                lastAnswer = result;
+                addToHistory(`sin(${value}°)`, result);
+                
+                previousOperand.textContent = `sin(${value}°) =`;
+                currentOperand.textContent = formatResult(result);
+                shouldResetScreen = true;
+            } catch (error) {
+                currentOperand.textContent = 'ERROR';
+                shouldResetScreen = true;
+            }
+        }
+        
+        function calculateCos() {
+            try {
+                const value = parseFloat(currentOperand.textContent);
+                const result = Math.cos(value * Math.PI / 180); // Convert to radians
+                
+                lastAnswer = result;
+                addToHistory(`cos(${value}°)`, result);
+                
+                previousOperand.textContent = `cos(${value}°) =`;
+                currentOperand.textContent = formatResult(result);
+                shouldResetScreen = true;
+            } catch (error) {
+                currentOperand.textContent = 'ERROR';
+                shouldResetScreen = true;
+            }
+        }
+        
+        function calculateTan() {
+            try {
+                const value = parseFloat(currentOperand.textContent);
+                const result = Math.tan(value * Math.PI / 180); // Convert to radians
+                
+                lastAnswer = result;
+                addToHistory(`tan(${value}°)`, result);
+                
+                previousOperand.textContent = `tan(${value}°) =`;
+                currentOperand.textContent = formatResult(result);
+                shouldResetScreen = true;
+            } catch (error) {
+                currentOperand.textContent = 'ERROR';
+                shouldResetScreen = true;
+            }
+        }
+        
+        function calculateLog() {
+            try {
+                const value = parseFloat(currentOperand.textContent);
+                if (value <= 0) {
+                    currentOperand.textContent = 'ERROR';
+                    shouldResetScreen = true;
+                    return;
+                }
+                
+                const result = Math.log10(value);
+                
+                lastAnswer = result;
+                addToHistory(`log(${value})`, result);
+                
+                previousOperand.textContent = `log(${value}) =`;
+                currentOperand.textContent = formatResult(result);
+                shouldResetScreen = true;
+            } catch (error) {
+                currentOperand.textContent = 'ERROR';
+                shouldResetScreen = true;
+            }
+        }
+        
+        function calculateLn() {
+            try {
+                const value = parseFloat(currentOperand.textContent);
+                if (value <= 0) {
+                    currentOperand.textContent = 'ERROR';
+                    shouldResetScreen = true;
+                    return;
+                }
+                
+                const result = Math.log(value);
+                
+                lastAnswer = result;
+                addToHistory(`ln(${value})`, result);
+                
+                previousOperand.textContent = `ln(${value}) =`;
+                currentOperand.textContent = formatResult(result);
+                shouldResetScreen = true;
+            } catch (error) {
+                currentOperand.textContent = 'ERROR';
+                shouldResetScreen = true;
+            }
+        }
+        
+        function calculateFactorial() {
+            try {
+                const value = parseInt(currentOperand.textContent);
+                if (value < 0 || value > 170) {
+                    currentOperand.textContent = 'ERROR';
+                    shouldResetScreen = true;
+                    return;
+                }
+                
+                let result = 1;
+                for (let i = 2; i <= value; i++) {
+                    result *= i;
+                }
+                
+                lastAnswer = result;
+                addToHistory(`${value}!`, result);
+                
+                previousOperand.textContent = `${value}! =`;
+                currentOperand.textContent = formatResult(result);
+                shouldResetScreen = true;
+            } catch (error) {
+                currentOperand.textContent = 'ERROR';
+                shouldResetScreen = true;
+            }
+        }
+        
+        function calculateAbsolute() {
+            try {
+                const value = parseFloat(currentOperand.textContent);
+                const result = Math.abs(value);
+                
+                lastAnswer = result;
+                addToHistory(`|${value}|`, result);
+                
+                previousOperand.textContent = `|${value}| =`;
+                currentOperand.textContent = formatResult(result);
+                shouldResetScreen = true;
+            } catch (error) {
+                currentOperand.textContent = 'ERROR';
+                shouldResetScreen = true;
+            }
+        }
+        
+        function calculateInverse() {
+            try {
+                const value = parseFloat(currentOperand.textContent);
+                if (value === 0) {
+                    currentOperand.textContent = 'ERROR';
+                    shouldResetScreen = true;
+                    return;
+                }
+                
+                const result = 1 / value;
+                
+                lastAnswer = result;
+                addToHistory(`${value}⁻¹`, result);
+                
+                previousOperand.textContent = `${value}⁻¹ =`;
+                currentOperand.textContent = formatResult(result);
+                shouldResetScreen = true;
+            } catch (error) {
+                currentOperand.textContent = 'ERROR';
+                shouldResetScreen = true;
+            }
+        }
+        
+        // Memory functions
+        function appendToMemory() {
+            try {
+                let value;
+                
+                if (currentCalculatorType === 'fraction') {
+                    value = parseFloat(fractionNumerator.textContent) / parseFloat(fractionDenominator.textContent);
+                } else if (currentCalculatorType === 'money') {
+                    value = parseFloat(amountInput.value);
+                } else {
+                    value = parseFloat(currentOperand.textContent);
+                }
+                
+                memory += value;
+                showMessage(`Memory updated: ${value}`, 'success', loginMessage);
+            } catch (error) {
+                showMessage('Invalid number', 'error', loginMessage);
+            }
+        }
+        
+        function recallMemory() {
+            if (currentCalculatorType === 'fraction') {
+                // Convert to fraction
+                const wholePart = Math.floor(memory);
+                const decimalPart = memory - wholePart;
+                
+                if (decimalPart === 0) {
+                    fractionNumerator.textContent = wholePart;
+                    fractionDenominator.textContent = '1';
+                } else {
+                    // Find a simple fraction for the decimal part
+                    const tolerance = 1.0E-6;
+                    let numerator = 1;
+                    let denominator = 1;
+                    
+                    while (Math.abs(decimalPart - numerator / denominator) > tolerance) {
+                        if (decimalPart > numerator / denominator) {
+                            numerator++;
+                        } else {
+                            denominator++;
+                            numerator = Math.round(decimalPart * denominator);
+                        }
+                    }
+                    
+                    fractionNumerator.textContent = wholePart * denominator + numerator;
+                    fractionDenominator.textContent = denominator;
+                }
+                
+                numeratorInput.value = fractionNumerator.textContent;
+                denominatorInput.value = fractionDenominator.textContent;
+            } else if (currentCalculatorType === 'money') {
+                amountInput.value = memory;
+                convertCurrency();
+            } else {
+                currentOperand.textContent = memory.toString();
+            }
+            
+            shouldResetScreen = false;
+        }
+        
+        function clearMemory() {
+            memory = 0;
+            showMessage('Memory cleared', 'success', loginMessage);
+        }
+        
+        function appendLastAnswer() {
+            if (currentCalculatorType === 'fraction') {
+                // Convert to fraction
+                const wholePart = Math.floor(lastAnswer);
+                const decimalPart = lastAnswer - wholePart;
+                
+                if (decimalPart === 0) {
+                    fractionNumerator.textContent = wholePart;
+                    fractionDenominator.textContent = '1';
+                } else {
+                    // Find a simple fraction for the decimal part
+                    const tolerance = 1.0E-6;
+                    let numerator = 1;
+                    let denominator = 1;
+                    
+                    while (Math.abs(decimalPart - numerator / denominator) > tolerance) {
+                        if (decimalPart > numerator / denominator) {
+                            numerator++;
+                        } else {
+                            denominator++;
+                            numerator = Math.round(decimalPart * denominator);
+                        }
+                    }
+                    
+                    fractionNumerator.textContent = wholePart * denominator + numerator;
+                    fractionDenominator.textContent = denominator;
+                }
+                
+                numeratorInput.value = fractionNumerator.textContent;
+                denominatorInput.value = fractionDenominator.textContent;
+            } else if (currentCalculatorType === 'money') {
+                amountInput.value = lastAnswer;
+                convertCurrency();
+            } else {
+                currentOperand.textContent = lastAnswer.toString();
+            }
+            
+            shouldResetScreen = false;
+        }
+        
+        function copyResult() {
+            let textToCopy = '';
+            if (currentCalculatorType === 'fraction') {
+                textToCopy = `${fractionNumerator.textContent}/${fractionDenominator.textContent}`;
+            } else if (currentCalculatorType === 'money') {
+                // Extract the result number from the conversion result text
+                const resultText = conversionResult.textContent;
+                // The format is "Result: X Y" where X is the number and Y is the currency
+                const match = resultText.match(/Result: ([\d.]+) (\w{3})/);
+                if (match) {
+                    textToCopy = `${match[1]} ${match[2]}`;
+                } else {
+                    textToCopy = resultText.replace('Result: ', '');
+                }
+            } else {
+                textToCopy = currentOperand.textContent;
+            }
+
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                showMessage('Result copied to clipboard', 'success', loginMessage);
+            }).catch(err => {
+                showMessage('Failed to copy result', 'error', loginMessage);
+            });
+        }
+        
+        function formatResult(result) {
+            // Format to avoid long decimal numbers
+            if (Number.isInteger(result)) {
+                return result.toString();
+            } else {
+                return parseFloat(result.toFixed(10)).toString();
+            }
+        }
+        
+        function addToHistory(expression, result) {
+            const historyItem = {
+                expression: expression,
+                result: formatResult(result)
+            };
+            
+            history.unshift(historyItem);
+            
+            // Keep only the last 10 items
+            if (history.length > 10) {
+                history.pop();
+            }
+            
+            updateHistoryDisplay();
+        }
+        
+        function updateHistoryDisplay() {
+            historyList.innerHTML = '';
+            
+            history.forEach(item => {
+                const historyElement = document.createElement('div');
+                historyElement.className = 'history-item';
+                
+                historyElement.innerHTML = `
+                    <span class="history-expression">${item.expression}</span>
+                    <span class="history-result">${item.result}</span>
+                `;
+                
+                historyElement.addEventListener('click', function() {
+                    if (currentCalculatorType === 'fraction') {
+                        // Try to parse as fraction
+                        const parts = item.result.split('/');
+                        if (parts.length === 2) {
+                            fractionNumerator.textContent = parts[0];
+                            fractionDenominator.textContent = parts[1];
+                            numeratorInput.value = parts[0];
+                            denominatorInput.value = parts[1];
+                        } else {
+                            // Convert decimal to fraction
+                            const value = parseFloat(parts[0]);
+                            const wholePart = Math.floor(value);
+                            const decimalPart = value - wholePart;
+                            
+                            if (decimalPart === 0) {
+                                fractionNumerator.textContent = wholePart;
+                                fractionDenominator.textContent = '1';
+                            } else {
+                                // Find a simple fraction for the decimal part
+                                const tolerance = 1.0E-6;
+                                let numerator = 1;
+                                let denominator = 1;
+                                
+                                while (Math.abs(decimalPart - numerator / denominator) > tolerance) {
+                                    if (decimalPart > numerator / denominator) {
+                                        numerator++;
+                                    } else {
+                                        denominator++;
+                                        numerator = Math.round(decimalPart * denominator);
+                                    }
+                                }
+                                
+                                fractionNumerator.textContent = wholePart * denominator + numerator;
+                                fractionDenominator.textContent = denominator;
+                            }
+                            
+                            numeratorInput.value = fractionNumerator.textContent;
+                            denominatorInput.value = fractionDenominator.textContent;
+                        }
+                    } else if (currentCalculatorType === 'money') {
+                        amountInput.value = item.result;
+                        convertCurrency();
+                    } else {
+                        currentOperand.textContent = item.result;
+                    }
+                    shouldResetScreen = true;
+                });
+                
+                historyList.appendChild(historyElement);
+            });
+        }
+        
+        function clearHistory() {
+            history = [];
+            updateHistoryDisplay();
+        }
+        
+        function showMessage(text, type, element) {
+            element.textContent = text;
+            element.className = `message ${type}`;
+            element.classList.remove('hidden');
+            
+            // Auto hide after 5 seconds
+            setTimeout(() => {
+                element.classList.add('hidden');
+            }, 5000);
+        }
+        
+        // Add event listeners for money converter inputs to trigger conversion automatically
+        amountInput.addEventListener('input', convertCurrency);
+        fromCurrency.addEventListener('change', convertCurrency);
+        toCurrency.addEventListener('change', convertCurrency);
+    </script>
+</body>
+</html>
